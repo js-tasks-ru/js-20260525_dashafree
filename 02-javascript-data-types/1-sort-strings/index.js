@@ -5,6 +5,11 @@ const compareOptions = {
   caseFirst: 'upper',
 };
 
+const directions = {
+  asc: 1,
+  desc: -1,
+};
+
 /**
  * sortStrings - sorts array of string by two criteria "asc" or "desc"
  * @param {string[]} arr - the array of strings
@@ -12,19 +17,15 @@ const compareOptions = {
  * @returns {string[]}
  */
 export function sortStrings(arr, param = 'asc') {
-  if (param !== 'asc' && param !== 'desc') {
+  if (!(param in directions)) {
     console.log('Incorrect sorting type parameter. Please use "asc" or "desc"');
     return [];
   }
 
   const arraySorted = [...arr];
+  const direction = directions[param];
 
-  if (param === 'asc') {
-    arraySorted.sort((a, b) => a.localeCompare(b, locales, compareOptions));
-  }
-  else if (param === 'desc') {
-    arraySorted.sort((a, b) => b.localeCompare(a, locales, compareOptions));
-  }
+  arraySorted.sort((a, b) => directions[param] * a.localeCompare(b, locales, compareOptions));
 
   return arraySorted;
 }
