@@ -16,7 +16,7 @@ export default class ColumnChart {
   private link: string;
   private value: number;
   private formatHeading: (value: number) => string;
-  private chartHeight = 50;
+  chartHeight = 50;
 
   constructor({data, label, link, value, formatHeading }: Options = {}) {
     this.data = data || [];
