@@ -72,7 +72,7 @@ export default class ColumnChart {
 
     return data.map(item => {
       const normalized = Math.max(0, item);
-      const value = String(Math.floor(normalized * scale));
+      const value = Math.floor(normalized * scale);
       const percent = (normalized / maxValue * 100).toFixed(0);
       return `<div style="--value: ${value}" data-tooltip="${percent}%"></div>`;
     }).join('');
