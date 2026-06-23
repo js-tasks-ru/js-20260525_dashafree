@@ -10,12 +10,13 @@ interface Options {
 
 export default class ColumnChart {
   element: HTMLElement | null = null;
-  data: number[];
-  label: string;
-  link: string;
-  value: number;
-  formatHeading: (value: number) => string;
-  chartHeight = 50;
+  private bodyElement: Element | null = null;
+  private data: number[];
+  private label: string;
+  private link: string;
+  private value: number;
+  private formatHeading: (value: number) => string;
+  private chartHeight = 50;
 
   constructor({data, label, link, value, formatHeading }: Options = {}) {
     this.data = data || [];
@@ -24,6 +25,7 @@ export default class ColumnChart {
     this.value = value || 0;
     this.formatHeading = formatHeading || ((value) => `${value}`);
     this.element = createElement(this.template());
+    this.bodyElement = this.element.querySelector('[data-element="body"]');
   }
 
   template() {
@@ -44,11 +46,8 @@ export default class ColumnChart {
   }
 
   update(data: number[]) {
-    if (!this.element) return;
-
-    const body = this.element.querySelector('[data-element="body"]');
-    if (body) {
-      body.innerHTML = this.getColumns(data);
+    if (this.bodyElement) {
+      this.bodyElement.innerHTML = this.getColumns(data);
     }
   }
 
@@ -61,15 +60,20 @@ export default class ColumnChart {
   destroy() {
     this.remove();
     this.element = null;
+    this.bodyElement = null;
   }
 
   getColumns(data: number[]) {
-    const maxValue = Math.max(...data);
+    const maxValue = Math.max(0, ...data);
+
+    if (maxValue === 0) return '';
+
     const scale = this.chartHeight / maxValue;
 
     return data.map(item => {
-      const percent = (item / maxValue * 100).toFixed(0);
-      const value = String(Math.floor(item * scale));
+      const normalized = Math.max(0, item);
+      const value = String(Math.floor(normalized * scale));
+      const percent = (normalized / maxValue * 100).toFixed(0);
       return `<div style="--value: ${value}" data-tooltip="${percent}%"></div>`;
     }).join('');
   }
