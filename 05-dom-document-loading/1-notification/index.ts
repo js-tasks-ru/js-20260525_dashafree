@@ -8,12 +8,12 @@ interface Options {
 }
 
 export default class NotificationMessage {
-  static activeNotification: NotificationMessage | null;
+  static activeNotification: NotificationMessage | null = null;
   element: HTMLElement;
   message: string;
   type: NotificationType;
   duration: number;
-  timeoutId: number | null;
+  private timeoutId: number | null;
 
   constructor(message: string, { duration = 2000, type = 'success' }: Options = {}) {
     if (NotificationMessage.activeNotification) {
